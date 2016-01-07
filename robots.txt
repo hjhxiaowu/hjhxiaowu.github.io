@@ -1,2 +1,0 @@
-er-agent: *
-Sitemap: http://hjhxiaowu.github.io/sitemap.xml
