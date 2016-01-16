@@ -14,10 +14,10 @@
 &lt;li&gt;11月份跟女朋友一起去开平庆祝4周年&lt;/li&gt;
 &lt;li&gt;12月份，发了年终奖......&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;新的一年，关了朋友圈，删了炉石，早早地列下年度目标，希望今年能一一实现。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Junho</dc:creator><pubDate>Thu, 07 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-07:pages/2016/01/07/2016nian-xin-de-kai-shi.html</guid><category>新的开始</category></item><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2015/01/16/kaggle-competitions.html</link><description>&lt;h3&gt;0 准备&lt;/h3&gt;
+&lt;p&gt;新的一年，关了朋友圈，删了炉石，早早地列下年度目标，希望今年能一一实现。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Junho</dc:creator><pubDate>Thu, 07 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-07:pages/2016/01/07/2016nian-xin-de-kai-shi.html</guid><category>新的开始</category></item><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2015/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
 &lt;p&gt;新手一般选101类，有教程，可自行跟着教程过一遍
-&lt;img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" /&gt;
-本次以《&lt;a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;》为例，给出的数据总共有以下几个维度：&lt;/p&gt;
+&lt;img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;本次以《&lt;a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;》为例，给出的数据总共有以下几个维度：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;PassengerId：乘客ID&lt;/li&gt;
 &lt;li&gt;​Pclass：乘客等级，first class (1), second class (2), third class (3)&lt;/li&gt;
@@ -32,7 +32,7 @@
 &lt;li&gt;Embarked：搭乘站点&lt;/li&gt;
 &lt;li&gt;Survived：是否存活，1/0&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;1 训练数据预处理&lt;/h3&gt;
+&lt;h2&gt;1 训练数据预处理&lt;/h2&gt;
 &lt;p&gt;主要看数据是否有缺失，哪些Feature需要转换为数值型等等。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# 读取训练数据
 titanic = pandas.read_csv(&amp;quot;titanic_train.csv&amp;quot;)
@@ -54,9 +54,9 @@ titanic.loc[titanic[&amp;quot;Embarked&amp;quot;] == &amp;quot;Q&amp;quot;, &amp
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;2 选取合适算法进行交叉验证&lt;/h3&gt;
+&lt;h2&gt;2 选取合适算法进行交叉验证&lt;/h2&gt;
 &lt;p&gt;交叉验证是为了避免过度拟合。将训练数据分为n份（假设n=3），n0为测试数据，n1、n2为训练数据，预测accuracy，再以n1为测试数据，以此类推，最后评估总体accuracy。&lt;/p&gt;
-&lt;h4&gt;2.1 LinearRegression&lt;/h4&gt;
+&lt;h3&gt;2.1 LinearRegression&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.linear_model&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LinearRegression&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.cross_validation&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;KFold&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
@@ -88,7 +88,7 @@ titanic.loc[titanic[&amp;quot;Embarked&amp;quot;] == &amp;quot;Q&amp;quot;, &amp
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;2.2 Logistic regression&lt;/h4&gt;
+&lt;h3&gt;2.2 Logistic regression&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cross_validation&lt;/span&gt;
 &lt;span class="c"&gt;# 初始化LogisticRegression&lt;/span&gt;
 &lt;span class="n"&gt;alg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;LogisticRegression&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;random_state&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -99,9 +99,9 @@ titanic.loc[titanic[&amp;quot;Embarked&amp;quot;] == &amp;quot;Q&amp;quot;, &amp
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;3 提高预测准确率&lt;/h3&gt;
+&lt;h2&gt;3 提高预测准确率&lt;/h2&gt;
 &lt;p&gt;包括3点：选取更为合适的算法、找到更合适的Feature、集成算法。&lt;/p&gt;
-&lt;h4&gt;3.1 Random Forest&lt;/h4&gt;
+&lt;h3&gt;3.1 Random Forest&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cross_validation&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.ensemble&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RandomForestClassifier&lt;/span&gt;
 &lt;span class="n"&gt;predictors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Pclass&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Sex&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Age&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;SibSp&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Parch&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Fare&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Embarked&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -120,7 +120,7 @@ print(accuracy.mean())
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;3.2 发掘新的Feature&lt;/h4&gt;
+&lt;h3&gt;3.2 发掘新的Feature&lt;/h3&gt;
 &lt;p&gt;可以通过截取Name字段中乘客的first name，来分析乘客的身份地位，进而预测乘客的生还几率。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
 &lt;span class="c"&gt;# 截取first name&lt;/span&gt;
@@ -141,7 +141,7 @@ print(accuracy.mean())
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;3.3 寻找合适的Feature&lt;/h4&gt;
+&lt;h3&gt;3.3 寻找合适的Feature&lt;/h3&gt;
 &lt;p&gt;通过sklearn包中SelectKBest函数，分析每个Feature与结果的相关性，进而选取合适的Feature。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.feature_selection&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SelectKBest&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;f_classif&lt;/span&gt;
@@ -164,7 +164,7 @@ print(accuracy.mean())
 
 
 &lt;p&gt;&lt;img alt="pic2" src="https://lh3.googleusercontent.com/-VQXIqiS7Epc/VpnulVYIlbI/AAAAAAAAAB4/FQ74sgWCV7U/s368-Ic42/article2-Kaggle-pic2.png" /&gt;&lt;/p&gt;
-&lt;h4&gt;3.4 集成算法（Ensembling）&lt;/h4&gt;
+&lt;h3&gt;3.4 集成算法（Ensembling）&lt;/h3&gt;
 &lt;p&gt;多样化的分类算法通常会比单一算法效果更佳。但是有两点需要注意：
 1）集成的算法不能类似，如逻辑回归和线性回归；
 2）算法必须在同一精度下。
@@ -230,5 +230,5 @@ print(accuracy.mean())
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;4 不断优化&lt;/h3&gt;
+&lt;h2&gt;4 不断优化&lt;/h2&gt;
 &lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Junho</dc:creator><pubDate>Fri, 16 Jan 2015 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2015-01-16:pages/2015/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item></channel></rss>
