@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>Junho's Tech Blog</title>
+    <meta name="description" content="">
+    <meta name="author" content="Junho">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="../theme/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../theme/bootstrap.min.css" rel="stylesheet">
+    <link href="../theme/bootstrap.min.responsive.css" rel="stylesheet">
+    <link href="../theme/local.css" rel="stylesheet">
+    <link href="../theme/pygments.css" rel="stylesheet">
+
+    <!-- So Firefox can bookmark->"abo this site" -->
+        <link href="http://hjhxiaowu.github.io/feeds/all.atom.xml" rel="alternate" title="Junho's Tech Blog" type="application/atom+xml">
+        <link href="http://hjhxiaowu.github.io/feeds/all.rss.xml" rel="alternate" title="Junho's Tech Blog" type="application/rss+xml">
+
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="navbar-inner">
+    <div class="container">
+
+         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+         </a>
+
+        <a class="brand" href="..">Junho's Tech Blog</a>
+
+        <div class="nav-collapse">
+        <ul class="nav">
+
+            <li><a href="../pages/about-me.html">About Me</a></li>
+        </ul>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content">
+    <div class="row">
+
+        <div class="span9">
+        
+
+        
+
+
+    <div class='article'>
+        <div class="content-title">
+            <a href="../pages/2015/01/16/kaggle-competitions.html"><h1>Kaggle Competitions</h1></a>
+2015-01-16
+
+by <a class="url fn" href="../author/junho.html">Junho</a>
+ 
+
+
+ 
+        </div>
+        
+        <div><h3>0 准备</h3>
+<p>新手一般选101类，有教程，可自行跟着教程过一遍
+<img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" />
+本次以《<a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle">Titanic: Machine Learning from Disaster</a>》为例，给出的数据总共有以下几个维度：</p>
+<ul>
+<li>PassengerId：乘客ID</li>
+<li>​Pclass：乘客等级，first class (1), second class (2), third class (3)</li>
+<li>Name：乘客名</li>
+<li>Sex：性别</li>
+<li>Age：年龄</li>
+<li>SibSp：同船兄弟姐妹和配偶人数</li>
+<li>Parch：同船父母和儿女人数</li>
+<li>Ticket：船票ID</li>
+<li>Fare：票价</li>
+<li>Cabin：船舱</li>
+<li>Embarked：搭乘站点</li>
+<li>Survived：是否存活，1/0</li>
+</ul>
+<h3>1 训练数据预处理</h3>
+<p>主要看数据是否有缺失，哪些Feature需要转换为数值型等等。</p>
+<div class="highlight"><pre># 读取训练数据
+titanic = pandas.read_csv(&quot;titanic_train.csv&quot;)
+# 观察数据
+print(titanic.head(5))
+print(titanic.describe())
+# 缺失数据用均值填充
+titanic[&quot;Age&quot;] = titanic[&quot;Age&quot;].fillna(titanic[&quot;Age&quot;].median())
+# 标称型数据转化为数值型数据
+titanic.loc[titanic[&quot;Sex&quot;] == &quot;male&quot;, &quot;Sex&quot;] = 0
+titanic.loc[titanic[&quot;Sex&quot;] == &quot;female&quot;, &quot;Sex&quot;] = 1
+# 手工填充缺失数据并转化为数值型
+print(titanic[&quot;Embarked&quot;].unique())
+# The most common embarkation port is S, so let&#39;s assume everyone got on there.
+titanic[&quot;Embarked&quot;] = titanic[&quot;Embarked&quot;].fillna(&quot;S&quot;)
+titanic.loc[titanic[&quot;Embarked&quot;] == &quot;S&quot;, &quot;Embarked&quot;] = 0
+titanic.loc[titanic[&quot;Embarked&quot;] == &quot;C&quot;, &quot;Embarked&quot;] = 1
+titanic.loc[titanic[&quot;Embarked&quot;] == &quot;Q&quot;, &quot;Embarked&quot;] = 2
+</pre></div>
+
+
+<h3>2 选取合适算法进行交叉验证</h3>
+<p>交叉验证是为了避免过度拟合。将训练数据分为n份（假设n=3），n0为测试数据，n1、n2为训练数据，预测accuracy，再以n1为测试数据，以此类推，最后评估总体accuracy。</p>
+<h4>2.1 LinearRegression</h4>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c"># 选取合适Feature</span>
+<span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;SibSp&quot;</span><span class="p">,</span> <span class="s">&quot;Parch&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">]</span>
+<span class="c"># 初始化LinearRegressio</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="c"># 将训练数据分为3份，进行交叉验证</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c"># 交叉验证</span>
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="kp">test</span> <span class="ow">in</span> <span class="n">kf</span><span class="p">:</span>
+        <span class="c"># 初始化训练数据预测集</span>
+    <span class="n">train_predictors</span> <span class="o">=</span> <span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">,:])</span>
+    <span class="c"># 初始化训练数据结果集</span>
+    <span class="n">train_target</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
+    <span class="c"># 训练数据预测集与结果集一一对应</span>
+    <span class="n">alg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_predictors</span><span class="p">,</span> <span class="n">train_target</span><span class="p">)</span>
+    <span class="c"># 根据训练数据对测试数据进行预测</span>
+    <span class="n">test_predictions</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="kp">test</span><span class="p">,:])</span>
+    <span class="c"># 合并至预测结果[&quot;Survived&quot;]</span>
+    <span class="n">predictions</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">test_predictions</span><span class="p">)</span>
+<span class="c"># 将3份预测结果合并为一份</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">concatenate</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c"># 评估总体准确率</span>
+<span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&lt;=.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">]])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>2.2 Logistic regression</h4>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cross_validation</span>
+<span class="c"># 初始化LogisticRegression</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c"># 交叉验证</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="o">.</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c"># 求平均准确率（accuracy有3份）</span>
+<span class="k">print</span><span class="p">(</span><span class="n">accuracy</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+
+
+<h3>3 提高预测准确率</h3>
+<p>包括3点：选取更为合适的算法、找到更合适的Feature、集成算法。</p>
+<h4>3.1 Random Forest</h4>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cross_validation</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;SibSp&quot;</span><span class="p">,</span> <span class="s">&quot;Parch&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">]</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="o">.</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">accuracy</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="c"># accuracy = 0.800224466891</span>
+</pre></div>
+
+
+<p>可以通过调整参数减少过度拟合。</p>
+<div class="highlight"><pre>alg = RandomForestClassifier(random_state=1, n_estimators=150, min_samples_split=4, min_samples_leaf=2)
+accuracy = cross_validation.cross_val_score(alg, titanic[predictors], titanic[&quot;Survived&quot;], cv=3)
+print(accuracy.mean())
+# accuracy = 0.819304152637
+</pre></div>
+
+
+<h4>3.2 发掘新的Feature</h4>
+<p>可以通过截取Name字段中乘客的first name，来分析乘客的身份地位，进而预测乘客的生还几率。</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">re</span>
+<span class="c"># 截取first name</span>
+<span class="k">def</span> <span class="nf">get_title</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="n">title_search</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39; ([A-Za-z]+)\.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title_search</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">title_search</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;&quot;</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_title</span><span class="p">)</span>
+<span class="c"># 分析titles中有多少类</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">titles</span><span class="p">))</span>
+<span class="c"># 为title定义数值标识</span>
+<span class="n">title_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Mr&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Miss&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Mrs&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Master&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&quot;Dr&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&quot;Rev&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s">&quot;Major&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Col&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Mlle&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;Mme&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;Don&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s">&quot;Lady&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Countess&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Jonkheer&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Sir&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s">&quot;Capt&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Ms&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">title_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">titles</span><span class="p">[</span><span class="n">titles</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">titles</span><span class="p">))</span>
+<span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">titles</span>
+</pre></div>
+
+
+<h4>3.3 寻找合适的Feature</h4>
+<p>通过sklearn包中SelectKBest函数，分析每个Feature与结果的相关性，进而选取合适的Feature。</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span><span class="p">,</span> <span class="n">f_classif</span>
+<span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;SibSp&quot;</span><span class="p">,</span> <span class="s">&quot;Parch&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">,</span> <span class="s">&quot;FamilySize&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">,</span> <span class="s">&quot;FamilyId&quot;</span><span class="p">]</span>
+<span class="c"># SelectKBest函数：初始化selector</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">f_classif</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">])</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="kp">log10</span><span class="p">(</span><span class="n">selector</span><span class="o">.</span><span class="n">pvalues_</span><span class="p">)</span>
+<span class="c"># 各Features的scores可视化</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)),</span> <span class="n">scores</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predictors</span><span class="p">)),</span> <span class="n">predictors</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c"># 选取合适的features</span>
+<span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">]</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="o">.</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">accuracy</span><span class="o">.</span><span class="kp">mean</span><span class="p">())</span>
+<span class="c"># accuracy = 0.811447811448</span>
+</pre></div>
+
+
+<p><img alt="pic2" src="https://lh3.googleusercontent.com/-VQXIqiS7Epc/VpnulVYIlbI/AAAAAAAAAB4/FQ74sgWCV7U/s368-Ic42/article2-Kaggle-pic2.png" /></p>
+<h4>3.4 集成算法（Ensembling）</h4>
+<p>多样化的分类算法通常会比单一算法效果更佳。但是有两点需要注意：
+1）集成的算法不能类似，如逻辑回归和线性回归；
+2）算法必须在同一精度下。
+这里以Gradient Boosting（GB）和logistic regression（LR）集成为例：</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c"># ensemble algorithms</span>
+<span class="n">algorithms</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">,</span> <span class="s">&quot;FamilySize&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">,</span> <span class="s">&quot;FamilyId&quot;</span><span class="p">]],</span>
+    <span class="p">[</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;FamilySize&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">]]</span>
+<span class="p">]</span>
+<span class="c"># 初始化cross validation folds</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="kp">test</span> <span class="ow">in</span> <span class="n">kf</span><span class="p">:</span>
+    <span class="n">train_target</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">]</span>
+    <span class="n">full_test_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">alg</span><span class="p">,</span> <span class="n">predictors</span> <span class="ow">in</span> <span class="n">algorithms</span><span class="p">:</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train</span><span class="p">,:],</span> <span class="n">train_target</span><span class="p">)</span>
+        <span class="c"># The .astype(float) is necessary to convert the dataframe to all floats and avoid an sklearn error.</span>
+        <span class="n">test_predictions</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="kp">test</span><span class="p">,:]</span><span class="o">.</span><span class="kp">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))[:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">full_test_predictions</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">test_predictions</span><span class="p">)</span>
+    <span class="n">test_predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">full_test_predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">full_test_predictions</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">test_predictions</span><span class="p">[</span><span class="n">test_predictions</span> <span class="o">&lt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">test_predictions</span><span class="p">[</span><span class="n">test_predictions</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">predictions</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">test_predictions</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">concatenate</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">]])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+<span class="c"># accuracy = 0.819304152637</span>
+<span class="c"># 测试数据添加新Feature：Title,FamilySize,FamilyId</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_title</span><span class="p">)</span>
+<span class="n">title_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Mr&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Miss&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Mrs&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Master&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&quot;Dr&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&quot;Rev&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s">&quot;Major&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Col&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Mlle&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;Mme&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;Don&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s">&quot;Lady&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Countess&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Jonkheer&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&quot;Sir&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s">&quot;Capt&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">&quot;Ms&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Dona&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">title_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">titles</span><span class="p">[</span><span class="n">titles</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">titles</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;Title&quot;</span><span class="p">]))</span>
+<span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;FamilySize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;SibSp&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;Parch&quot;</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">family_id_mapping</span><span class="p">)</span>
+<span class="n">family_ids</span> <span class="o">=</span> <span class="n">titanic_test</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_family_id</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">family_ids</span><span class="p">[</span><span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;FamilySize&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;FamilyId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">family_ids</span>
+<span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;NameLength&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">,</span> <span class="s">&quot;FamilySize&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">,</span> <span class="s">&quot;FamilyId&quot;</span><span class="p">]</span>
+<span class="n">algorithms</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">predictors</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s">&quot;Pclass&quot;</span><span class="p">,</span> <span class="s">&quot;Sex&quot;</span><span class="p">,</span> <span class="s">&quot;Fare&quot;</span><span class="p">,</span> <span class="s">&quot;FamilySize&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">,</span> <span class="s">&quot;Age&quot;</span><span class="p">,</span> <span class="s">&quot;Embarked&quot;</span><span class="p">]]</span>
+<span class="p">]</span>
+<span class="n">full_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">alg</span><span class="p">,</span> <span class="n">predictors</span> <span class="ow">in</span> <span class="n">algorithms</span><span class="p">:</span>
+    <span class="n">alg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">titanic</span><span class="p">[</span><span class="s">&quot;Survived&quot;</span><span class="p">])</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">titanic_test</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="kp">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">full_predictions</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="c"># 由于GB预测准确率较高，所以权重较大</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">full_predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">full_predictions</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&lt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="kp">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">submission</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s">&quot;PassengerId&quot;</span><span class="p">:</span> <span class="n">titanic_test</span><span class="p">[</span><span class="s">&quot;PassengerId&quot;</span><span class="p">],</span>
+        <span class="s">&quot;Survived&quot;</span><span class="p">:</span> <span class="n">predictions</span>
+    <span class="p">})</span>
+</pre></div>
+
+
+<h3>4 不断优化</h3>
+<p>通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。</p></div>
+        <hr />
+    </div>
+		
+<div class="pagination">
+<ul>
+    <li class="prev disabled"><a href="#">&larr; Previous</a></li>
+
+    <li class="active"><a href="../category/data.html">1</a></li>
+
+    <li class="next disabled"><a href="#">&rarr; Next</a></li>
+
+</ul>
+</div>
+ 
+  
+        </div>
+
+        <div class="span3">
+
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header">
+                Site
+                </li>
+
+                <li><a href="../archives.html">Archives</a>
+                <li><a href="../tags.html">Tags</a>
+
+
+
+                <li><a href="http://hjhxiaowu.github.io/feeds/all.atom.xml" rel="alternate">Atom</a></li>
+                <li><a href="http://hjhxiaowu.github.io/feeds/all.rss.xml" rel="alternate">RSS</a></li>
+
+            </ul>
+            </div>
+
+
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header">
+                Categories
+                </li>
+
+                <li><a href="../category/data.html">Data</a></li>
+                <li><a href="../category/life.html">Life</a></li>
+            </ul>
+            </div>
+
+
+            <div class="social">
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header">
+                Social
+                </li>
+
+                <li><a href="http://github.com/hjhxiaowu">Github</a></li>
+                <li><a href="https://www.quora.com/profile/Jun-Ho-3/blogs">Quora</a></li>
+                <li><a href="https://www.facebook.com/profile.php?id=100011018462648">Facebook</a></li>
+                <li><a href="http://stackoverflow.com/users/5763121/junho-huang">Stackoverflow</a></li>
+                <li><a href="https://cn.linkedin.com/in/小乌-黄-b743439a">Linkedin</a></li>
+                <li><a href="http://weibo.com/hxiaowu">Weibo</a></li>
+                <li><a href="http://www.zhihu.com/people/JunH-Huang">Zhihu</a></li>
+            </ul>
+            </div>
+            </div>
+
+
+            <div class="well" style="padding: 8px 0; background-color: #FBFBFB;">
+            <ul class="nav nav-list">
+                <li class="nav-header">
+                Links
+                </li>
+
+                <li><a href="http://getpelican.com/">Pelican</a></li>
+                <li><a href="http://python.org/">Python</a></li>
+            </ul>
+            </div>
+
+        </div>     </div>     </div> 
+<footer>
+<br />
+<p><a href="..">Junho's Tech Blog</a> &copy; Junho 2015</p>
+</footer>
+
+</div> <!-- /container -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="../theme/bootstrap-collapse.js"></script>
+<script>var _gaq=[['_setAccount','UA-72196835-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
+<a href="https://github.com/hjhxiaowu"><img style="position: absolute; top: 40px; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" /></a>
+</body>
+</html>
