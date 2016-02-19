@@ -216,4 +216,4 @@ print(accuracy.mean())
 
 
 &lt;h2&gt;4 不断优化&lt;/h2&gt;
-&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Junho</dc:creator><pubDate>Sat, 16 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item></channel></rss>
+&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">黄小乌</dc:creator><pubDate>Sat, 16 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item></channel></rss>

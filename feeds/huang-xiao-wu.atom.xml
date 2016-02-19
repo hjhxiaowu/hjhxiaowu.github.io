@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黄小乌</title><link>http://hjhxiaowu.github.io/</link><description></description><atom:link href="http://hjhxiaowu.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0800</lastBuildDate><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>黄小乌</title><link href="http://hjhxiaowu.github.io/" rel="alternate"></link><link href="http://hjhxiaowu.github.io/feeds/huang-xiao-wu.atom.xml" rel="self"></link><id>http://hjhxiaowu.github.io/</id><updated>2016-01-16T00:00:00+08:00</updated><entry><title>Kaggle Competitions</title><link href="http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html" rel="alternate"></link><updated>2016-01-16T00:00:00+08:00</updated><author><name>黄小乌</name></author><id>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</id><summary type="html">&lt;h2&gt;0 准备&lt;/h2&gt;
 &lt;p&gt;新手一般选101类，有教程，可自行跟着教程过一遍
 &lt;img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;本次以《&lt;a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;》为例，给出的数据总共有以下几个维度：&lt;/p&gt;
@@ -216,7 +216,7 @@ print(accuracy.mean())
 
 
 &lt;h2&gt;4 不断优化&lt;/h2&gt;
-&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">黄小乌</dc:creator><pubDate>Sat, 16 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item><item><title>2016年——新的开始</title><link>http://hjhxiaowu.github.io/pages/2016/01/07/2016nian-xin-de-kai-shi.html</link><description>&lt;p&gt;觉得自己真是老了，花了4个晚上，终于勉强把个人博客给搭起来了，也算是给自己2016年一个新的开始吧。
+&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</summary><category term="Kaggle"></category></entry><entry><title>2016年——新的开始</title><link href="http://hjhxiaowu.github.io/pages/2016/01/07/2016nian-xin-de-kai-shi.html" rel="alternate"></link><updated>2016-01-07T00:00:00+08:00</updated><author><name>黄小乌</name></author><id>tag:hjhxiaowu.github.io,2016-01-07:pages/2016/01/07/2016nian-xin-de-kai-shi.html</id><summary type="html">&lt;p&gt;觉得自己真是老了，花了4个晚上，终于勉强把个人博客给搭起来了，也算是给自己2016年一个新的开始吧。
 2015年，总的来说还是有所收获的。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;2月份借调去了市场部学做人，也坚定了自己跳槽的决心&lt;/li&gt;
@@ -231,4 +231,4 @@ print(accuracy.mean())
 &lt;li&gt;11月份跟女朋友一起去开平庆祝4周年&lt;/li&gt;
 &lt;li&gt;12月份，发了年终奖......&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;新的一年，关了朋友圈，删了炉石，早早地列下年度目标，希望今年能一一实现。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">黄小乌</dc:creator><pubDate>Thu, 07 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-07:pages/2016/01/07/2016nian-xin-de-kai-shi.html</guid><category>新的开始</category></item></channel></rss>
+&lt;p&gt;新的一年，关了朋友圈，删了炉石，早早地列下年度目标，希望今年能一一实现。&lt;/p&gt;</summary><category term="新的开始"></category></entry></feed>
