@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Junho's Tech Blog</title><link>http://hjhxiaowu.github.io/</link><description></description><atom:link href="http://hjhxiaowu.github.io/feeds/data.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0800</lastBuildDate><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黄小乌</title><link>http://hjhxiaowu.github.io/</link><description></description><atom:link href="http://hjhxiaowu.github.io/feeds/data.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0800</lastBuildDate><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
 &lt;p&gt;新手一般选101类，有教程，可自行跟着教程过一遍
 &lt;img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;本次以《&lt;a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;》为例，给出的数据总共有以下几个维度：&lt;/p&gt;
