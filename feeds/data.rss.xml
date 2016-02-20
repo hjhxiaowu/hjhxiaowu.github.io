@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黄小乌</title><link>http://hjhxiaowu.github.io/</link><description></description><atom:link href="http://hjhxiaowu.github.io/feeds/data.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0800</lastBuildDate><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>小乌的学习笔记</title><link>http://hjhxiaowu.github.io/</link><description></description><atom:link href="http://hjhxiaowu.github.io/feeds/data.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0800</lastBuildDate><item><title>Kaggle Competitions</title><link>http://hjhxiaowu.github.io/pages/2016/01/16/kaggle-competitions.html</link><description>&lt;h2&gt;0 准备&lt;/h2&gt;
 &lt;p&gt;新手一般选101类，有教程，可自行跟着教程过一遍
 &lt;img alt="pic1" src="https://lh3.googleusercontent.com/-croyaD7Md6g/Vpnule-JNUI/AAAAAAAAAB8/V4tnjUjknO8/s699-Ic42/article2-Kaggle-pic1.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;本次以《&lt;a href="https://www.dataquest.io/mission/74/getting-started-with-kaggle"&gt;Titanic: Machine Learning from Disaster&lt;/a&gt;》为例，给出的数据总共有以下几个维度：&lt;/p&gt;
@@ -216,4 +216,4 @@ print(accuracy.mean())
 
 
 &lt;h2&gt;4 不断优化&lt;/h2&gt;
-&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">黄小乌</dc:creator><pubDate>Sat, 16 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item></channel></rss>
+&lt;p&gt;通过第三点提到的方法（选取更为合适的算法、找到更合适的Feature、集成算法），再进一步优化，提高accuracy，比如：尝试加入random forest到ensemble algorithm中；尝试支持向量机、神经网络；调整各算法的比重；尝试从已有字段再截取可用的相关信息；等等。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">junho</dc:creator><pubDate>Sat, 16 Jan 2016 00:00:00 +0800</pubDate><guid>tag:hjhxiaowu.github.io,2016-01-16:pages/2016/01/16/kaggle-competitions.html</guid><category>Kaggle</category></item></channel></rss>
